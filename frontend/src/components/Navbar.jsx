@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {Link} from 'react-router-dom';
 
 function Navbar() {
   
@@ -19,30 +20,29 @@ function Navbar() {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8 text-slate-300 font-medium">
-          <a href="#products" className="hover:text-white transition-colors">Products</a>
-          <a href="#resources" className="hover:text-white transition-colors">Resources</a>
-          <a href="#stories" className="hover:text-white transition-colors">Stories</a>
-          <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+          <Link to='/' onClick={()=>scrollTo(0,0)}>Home</Link>
+          <Link to='/marketplace' onClick={()=>scrollTo(0,0)}>Marketplace</Link>
+          <Link to='/messages' onClick={()=>scrollTo(0,0)}>Messages</Link>
+          <Link to='/my-listings' onClick={()=>scrollTo(0,0)}>My Listings</Link>
         </div>
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex items-center space-x-4">
-          <button className="text-slate-300 hover:text-white px-4 py-2 transition">
+          <button className=" bg-indigo-600 hover:bg-indigo-500 transition text-white rounded-full font-semibold px-4 py-2 ">
             Login
-          </button>
-          <button className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 transition text-white rounded-full font-semibold">
-            Get started
           </button>
         </div>
 
-        {/* Mobile Menu Toggle Button */}
+
         <button 
           onClick={() => setMenuOpen(!menuOpen)} 
-          className="md:hidden text-white active:scale-90 transition-transform"
+          className="md:hidden text-white z-60 active:scale-90 transition-transform relative"
         >
           {menuOpen ? (
+            /* The Cross Icon */
             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
           ) : (
+            /* The Hamburger Icon */
             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
           )}
         </button>
@@ -54,11 +54,23 @@ function Navbar() {
           menuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
         }`}
       >
-        <a href="#products" onClick={() => setMenuOpen(false)}>Products</a>
-        <a href="#resources" onClick={() => setMenuOpen(false)}>Resources</a>
-        <a href="#stories" onClick={() => setMenuOpen(false)}>Stories</a>
-        <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
-        <button className="mt-4 px-8 py-3 bg-indigo-600 rounded-full w-2/3">Get Started</button>
+        {/* Added setMenuOpen(false) to all Link clicks */}
+        <Link to='/' onClick={() => { setMenuOpen(false); window.scrollTo(0,0); }}>
+            Home
+        </Link>
+        <Link to='/marketplace' onClick={() => { setMenuOpen(false); window.scrollTo(0,0); }}>
+            Marketplace
+        </Link>
+        <Link to='/messages' onClick={() => { setMenuOpen(false); window.scrollTo(0,0); }}>
+            Messages
+        </Link>
+        <Link to='/my-listings' onClick={() => { setMenuOpen(false); window.scrollTo(0,0); }}>
+            My Listings
+        </Link>
+        
+        <button className="mt-4 px-8 py-3 bg-indigo-600 rounded-full w-2/3 shadow-lg shadow-indigo-500/20">
+            Login
+        </button>
       </div>
     </div>
   );

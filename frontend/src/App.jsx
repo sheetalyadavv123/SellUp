@@ -15,9 +15,11 @@ import Navbar from './components/Navbar'
 function App() {
   const {pathname}=useLocation();
   return (
-    <div>
+    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-indigo-500/30">
+    
       {!pathname.includes('/admin')&& <Navbar/>}
       <Routes>
+        
         <Route path='/' element={<Home/>}/>
         <Route path='/Marketplace' element={<Marketplace/>}/>
         <Route path='/my-listings' element={<MyListing/>}/>
@@ -27,8 +29,6 @@ function App() {
         <Route path='/messages' element={<Messages/>}/>
         <Route path='/my-orders' element={<MyOrders/>}/>
         <Route path='/loading' element={<Loading/>}/>
-
-        
       </Routes>
     </div>
   )
