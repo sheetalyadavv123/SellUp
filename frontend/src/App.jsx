@@ -8,11 +8,15 @@ import ManageListing from './pages/ManageListing'
 import Messages from './pages/Messages'
 import MyOrders from './pages/MyOrders'
 import Loading from './pages/Loading'
+import {useLocation} from 'react-router-dom' 
+import Navbar from './components/Navbar'
 
 
 function App() {
+  const {pathname}=useLocation();
   return (
     <div>
+      {!pathname.includes('/admin')&& <Navbar/>}
       <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/Marketplace' element={<Marketplace/>}/>
