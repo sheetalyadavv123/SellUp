@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import {Link} from 'react-router-dom';
+import {useUser,useClerk,UserButton} from '@clerk/clerk-react';
 
 function Navbar() {
+    const {user}=useUser()
+    const {openSignIn}=useClerk()
   
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -22,8 +25,8 @@ function Navbar() {
         <div className="hidden md:flex items-center gap-8 text-slate-300 font-medium">
           <Link to='/' onClick={()=>scrollTo(0,0)}>Home</Link>
           <Link to='/marketplace' onClick={()=>scrollTo(0,0)}>Marketplace</Link>
-          <Link to='/messages' onClick={()=>scrollTo(0,0)}>Messages</Link>
-          <Link to='/my-listings' onClick={()=>scrollTo(0,0)}>My Listings</Link>
+          <Link to={user ? '/messages' : "#"} onClick={()=> user ? scrollTo(0,0) :openSignIn()}>Messages</Link>
+          <Link to={user ?'/my-listings' : "#"} onClick={()=> user ? scrollTo(0,0) :openSignIn()}>My Listings</Link>
         </div>
 
         {/* Desktop Buttons */}
@@ -55,18 +58,10 @@ function Navbar() {
         }`}
       >
         {/* Added setMenuOpen(false) to all Link clicks */}
-        <Link to='/' onClick={() => { setMenuOpen(false); window.scrollTo(0,0); }}>
-            Home
-        </Link>
-        <Link to='/marketplace' onClick={() => { setMenuOpen(false); window.scrollTo(0,0); }}>
-            Marketplace
-        </Link>
-        <Link to='/messages' onClick={() => { setMenuOpen(false); window.scrollTo(0,0); }}>
-            Messages
-        </Link>
-        <Link to='/my-listings' onClick={() => { setMenuOpen(false); window.scrollTo(0,0); }}>
-            My Listings
-        </Link>
+        <Link to='/' onClick={() => { setMenuOpen(false); window.scrollTo(0,0); }}>Home</Link>
+        <Link to='/marketplace' onClick={() => { setMenuOpen(false); window.scrollTo(0,0); }}> Marketplace</Link>
+        <Link to={user ? '/messages' : "#"} onClick={()=> user ? scrollTo(0,0) :openSignIn()}>Messages</Link>
+        <Link to={user ?'/my-listings' : "#"} onClick={()=> user ? scrollTo(0,0) :openSignIn()}>My Listings</Link>
         
         <button className="mt-4 px-8 py-3 bg-indigo-600 rounded-full w-2/3 shadow-lg shadow-indigo-500/20">
             Login
