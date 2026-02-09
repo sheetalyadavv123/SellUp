@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import {Link} from 'react-router-dom';
+import {Link,Navigate} from 'react-router-dom';
 import {useUser,useClerk,UserButton} from '@clerk/clerk-react';
+import { BoxIcon, Grip as GripIcon, ListIcon, MessageCircleMoreIcon } from 'lucide-react';
 
 function Navbar() {
     const {user}=useUser()
@@ -28,13 +29,33 @@ function Navbar() {
           <Link to={user ? '/messages' : "#"} onClick={()=> user ? scrollTo(0,0) :openSignIn()}>Messages</Link>
           <Link to={user ?'/my-listings' : "#"} onClick={()=> user ? scrollTo(0,0) :openSignIn()}>My Listings</Link>
         </div>
-
-        {/* Desktop Buttons */}
-        <div className="hidden md:flex items-center space-x-4">
-          <button className=" bg-indigo-600 hover:bg-indigo-500 transition text-white rounded-full font-semibold px-4 py-2 ">
+       
+         {!user ? (
+            <div className="hidden md:flex items-center space-x-4">
+          <button onClick={openSignIn} className=" bg-indigo-600 hover:bg-indigo-500 transition text-white rounded-full font-semibold px-4 py-2 ">
             Login
           </button>
         </div>
+         ):(
+            <UserButton>
+                <UserButton.MenuItems>
+                    <UserButton.Action label='Marketplace' labelIcon={<GripIcon size={16}/>} onClick={()=>Navigate('/marketplace')} />
+                </UserButton.MenuItems>
+                <UserButton.MenuItems>
+                    <UserButton.Action label='Messages' labelIcon={<MessageCircleMoreIcon size={16}/>} onClick={()=>Navigate('/messages')} />
+                </UserButton.MenuItems>
+                <UserButton.MenuItems>
+                    <UserButton.Action label='My Listings' labelIcon={<ListIcon size={16}/>} onClick={()=>Navigate('/my-listings')} />
+                </UserButton.MenuItems>
+                <UserButton.MenuItems>
+                    <UserButton.Action label='My Orders' labelIcon={<BoxIcon size={16}/>} onClick={()=>Navigate('/my-orders')} />
+                </UserButton.MenuItems>
+                
+            </UserButton>
+            
+         )}
+
+        
 
 
         <button 
@@ -63,9 +84,16 @@ function Navbar() {
         <Link to={user ? '/messages' : "#"} onClick={()=> user ? scrollTo(0,0) :openSignIn()}>Messages</Link>
         <Link to={user ?'/my-listings' : "#"} onClick={()=> user ? scrollTo(0,0) :openSignIn()}>My Listings</Link>
         
-        <button className="mt-4 px-8 py-3 bg-indigo-600 rounded-full w-2/3 shadow-lg shadow-indigo-500/20">
+        {!user ? (
+        <div className="mt-4 px-8 py-3 bg-indigo-600 rounded-full w-2/3 shadow-lg shadow-indigo-500/20">
+          <button onClick={openSignIn} className=" bg-indigo-600 hover:bg-indigo-500 transition text-white rounded-full font-semibold px-4 py-2 ">
             Login
-        </button>
+          </button>
+        </div>
+         ):(
+            <UserButton/>
+         )}
+
       </div>
     </div>
   );
