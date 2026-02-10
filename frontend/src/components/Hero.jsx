@@ -57,16 +57,6 @@ function Hero() {
             <input type="text" placeholder="Instagram Account" className="w-full h-full outline-none placeholder-gray-500 text-gray-500 bg-transparent text-sm" />
             <button type="submit" className="bg-indigo-500 w-32 h-9 rounded-full text-sm text-white">Search</button>
         </div>
-          
-
-          <div className="relative mt-20 w-full max-w-5xl">
-            <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-[#FFB6C1] rounded-[20px] blur opacity-20"></div>
-            <img 
-              src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/hero/hero-section-showcase-2.png"
-              className="relative w-full rounded-[15px] border border-white/10 shadow-2xl"
-              alt="SellUp Platform Preview"
-            />
-          </div>
         </div>
       </section>
     </div>

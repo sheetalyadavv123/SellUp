@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import {Link,Navigate} from 'react-router-dom';
+import {Link,Navigate,useNavigate} from 'react-router-dom';
 import {useUser,useClerk,UserButton} from '@clerk/clerk-react';
 import { BoxIcon, Grip as GripIcon, ListIcon, MessageCircleMoreIcon } from 'lucide-react';
+
 
 function Navbar() {
     const {user}=useUser()
     const {openSignIn}=useClerk()
+    const navigate = useNavigate();
   
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -29,13 +31,13 @@ function Navbar() {
           <Link to={user ? '/messages' : "#"} onClick={()=> user ? scrollTo(0,0) :openSignIn()}>Messages</Link>
           <Link to={user ?'/my-listings' : "#"} onClick={()=> user ? scrollTo(0,0) :openSignIn()}>My Listings</Link>
         </div>
-       
+        <div className="hidden md:flex items-center space-x-4">
          {!user ? (
-            <div className="hidden md:flex items-center space-x-4">
+            
           <button onClick={openSignIn} className=" bg-indigo-600 hover:bg-indigo-500 transition text-white rounded-full font-semibold px-4 py-2 ">
             Login
           </button>
-        </div>
+        
          ):(
             <UserButton>
                 <UserButton.MenuItems>
@@ -53,7 +55,9 @@ function Navbar() {
                 
             </UserButton>
             
+            
          )}
+         </div>
 
         
 
@@ -81,8 +85,8 @@ function Navbar() {
         {/* Added setMenuOpen(false) to all Link clicks */}
         <Link to='/' onClick={() => { setMenuOpen(false); window.scrollTo(0,0); }}>Home</Link>
         <Link to='/marketplace' onClick={() => { setMenuOpen(false); window.scrollTo(0,0); }}> Marketplace</Link>
-        <Link to={user ? '/messages' : "#"} onClick={()=> user ? scrollTo(0,0) :openSignIn()}>Messages</Link>
-        <Link to={user ?'/my-listings' : "#"} onClick={()=> user ? scrollTo(0,0) :openSignIn()}>My Listings</Link>
+        <Link to={user ? '/messages' : "#"} onClick={()=> { setMenuOpen(false); user ? window.scrollTo(0,0) : openSignIn() }}>Messages</Link>
+        <Link to={user ?'/my-listings' : "#"} onClick={()=> { setMenuOpen(false); user ? window.scrollTo(0,0) : openSignIn() }}>My Listings</Link>
         
         {!user ? (
         <div className="mt-4 px-8 py-3 bg-indigo-600 rounded-full w-2/3 shadow-lg shadow-indigo-500/20">
@@ -91,7 +95,22 @@ function Navbar() {
           </button>
         </div>
          ):(
-            <UserButton/>
+             <UserButton>
+                <UserButton.MenuItems>
+                    <UserButton.Action label='Marketplace' labelIcon={<GripIcon size={16}/>} onClick={()=>Navigate('/marketplace')} />
+                </UserButton.MenuItems>
+                <UserButton.MenuItems>
+                    <UserButton.Action label='Messages' labelIcon={<MessageCircleMoreIcon size={16}/>} onClick={()=>Navigate('/messages')} />
+                </UserButton.MenuItems>
+                <UserButton.MenuItems>
+                    <UserButton.Action label='My Listings' labelIcon={<ListIcon size={16}/>} onClick={()=>Navigate('/my-listings')} />
+                </UserButton.MenuItems>
+                <UserButton.MenuItems>
+                    <UserButton.Action label='My Orders' labelIcon={<BoxIcon size={16}/>} onClick={()=>Navigate('/my-orders')} />
+                </UserButton.MenuItems>
+                
+            </UserButton>
+            
          )}
 
       </div>
