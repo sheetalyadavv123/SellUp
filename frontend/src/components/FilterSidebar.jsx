@@ -27,6 +27,13 @@ const FilterSidebar = ({ showFilterPhone, setShowFilterPhone, filters, setFilter
         setExpandedSections((prev)=>({...prev,[section]: !prev[section]}))
     }
 
+    const onFiltersChange=(newFilters)=>{
+        setFilters(prev => ({
+        ...prev,
+        ...newFilters
+    }))
+    }
+
     const platforms=[
         {value:"youtube", label:"YouTube"},
         {value:"instagram", label:"Instagram"},
@@ -83,8 +90,60 @@ const FilterSidebar = ({ showFilterPhone, setShowFilterPhone, filters, setFilter
                 <label className='text-sm font-medium cursor-pointer uppercase tracking-wider'>Platform</label>
                 <ChevronDown className={`size-4 transition-transform duration-200 ${expandedSections.platform ? "rotate-180" : ""}`} />
             </button>
+            {expandedSections.platform && (
+                <div className='flex flex-col gap-2'>
+                    {platforms.map((platform)=>(
+                      <label key={platform.value} className='flex items-center gap-2 text-gray-700 text-sm'>
+                          <input type="checkbox" 
+                          checked={filters.platform?.includes(platform.value) || false}
+                          onChange={(e)=>{
+                            const checked=e.target.checked;
+                            const current=filters.platform || [];
+                            const updated=checked? [...current,platform.value] : current.filter((p)=>p!==platform.value);
+                            onFiltersChange({
+                                ...filters,
+                                platform: updated.length>0?updated:null
+                            })
+                          }}/>
+                          <span>{platform.label}</span>
+                      </label>
+                    ))}
+            </div>
+            )}
         </div>
-
+        {/*Price range */}
+           <div>
+            <button 
+                onClick={() => toggleSection("price")} 
+                className='flex items-center justify-between w-full mb-3 text-slate-300 hover:text-white transition-colors'>
+                <label className='text-sm font-medium cursor-pointer uppercase tracking-wider'>Price range</label>
+                <ChevronDown className={`size-4 transition-transform duration-200 ${expandedSections.price ? "rotate-180" : ""}`} />
+            </button>
+            {expandedSections.price && (
+                <div className='space-y-3'>
+                 <input
+            type="range"
+            min="0"
+            max="100000"
+            step="100"
+            
+            value={filters.maxPrice || 100000} 
+            onChange={(e) => {
+                const value = parseInt(e.target.value);
+               
+                onFiltersChange({ maxPrice: value });
+            }}
+            className='w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500'
+        />
+        <div className='flex items-center justify-between text-xs font-semibold text-slate-500'>
+            <span>0</span>
+            <span className='text-indigo-400'>
+                { (filters.maxPrice || 100000).toLocaleString() }
+            </span>
+        </div>
+    </div>
+        )}
+        </div>
       </div>
     </div>
   )
