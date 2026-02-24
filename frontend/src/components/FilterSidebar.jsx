@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 const FilterSidebar = ({ showFilterPhone, setShowFilterPhone, filters, setFilters }) => {
+    const currency=import.meta.env.VITE_CURRENCY || "$";
     const navigate=useNavigate()
     const [searchParams,setSearchParams]=useSearchParams()
     const [search,setSearch]=useState(searchParams.get("search") ||"")
@@ -43,6 +44,25 @@ const FilterSidebar = ({ showFilterPhone, setShowFilterPhone, filters, setFilter
         {value:"linkedin", label:"LinkedIn"},
         {value:"twitch", label:"Twitch"},
         {value:"discord", label:"Discord"},
+    ]
+
+    const niche=[
+        { value: "lifestyle", label: "Lifestyle" },
+        { value: "fitness", label: "Fitness" },
+        { value: "food", label: "Food" },
+        { value: "travel", label: "Travel" },
+        { value: "tech", label: "Technology" },
+        { value: "gaming", label: "Gaming" },
+        { value: "fashion", label: "Fashion" },
+        { value: "beauty", label: "Beauty" },
+        { value: "business", label: "Business" },
+        { value: "education", label: "Education" },
+        { value: "entertainment", label: "Entertainment" },
+        { value: "music", label: "Music" },
+        { value: "art", label: "Art" },
+        { value: "sports", label: "Sports" },
+        { value: "health", label: "Health" },
+        { value: "finance", label: "Finance" },
     ]
   return (
     <div className={` 
@@ -130,18 +150,69 @@ const FilterSidebar = ({ showFilterPhone, setShowFilterPhone, filters, setFilter
             value={filters.maxPrice || 100000} 
             onChange={(e) => {
                 const value = parseInt(e.target.value);
-               
                 onFiltersChange({ maxPrice: value });
             }}
             className='w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500'
         />
         <div className='flex items-center justify-between text-xs font-semibold text-slate-500'>
-            <span>0</span>
+            <span className='text-indigo-400'>{currency}0</span>
             <span className='text-indigo-400'>
-                { (filters.maxPrice || 100000).toLocaleString() }
+                 {currency}{(filters.maxPrice || 100000).toLocaleString() }
             </span>
         </div>
     </div>
+        )}
+        </div>
+        {/*follower range */}
+        <div>
+            <button 
+    onClick={() => toggleSection("followers")} 
+    className='flex items-center justify-between w-full mb-3 text-slate-300 hover:text-white transition-colors'
+>
+    <label className='text-sm font-medium cursor-pointer uppercase tracking-wider'>Minimum Followers</label>
+    {/* Fixed: Now checks followers state for rotation */}
+    <ChevronDown className={`size-4 transition-transform duration-200 ${expandedSections.followers ? "rotate-180" : ""}`} />
+</button>
+
+{expandedSections.followers && (
+    <select 
+        value={filters.minFollowers?.toString()|| "0"}
+        onChange={(e) => onFiltersChange({...filters, minFollowers: parseInt(e.target.value) || "0" })}
+        className='w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-slate-200 outline-none focus:ring-1 focus:ring-indigo-500 transition-all appearance-none cursor-pointer'>
+        <option value="0" className="bg-slate-900">Any amount</option>
+        <option value="1000" className="bg-slate-900">1k+</option>
+        <option value="10000" className="bg-slate-900">10k+</option>
+        <option value="50000" className="bg-slate-900">50k+</option>
+        <option value="100000" className="bg-slate-900">100k+</option>
+        <option value="500000" className="bg-slate-900">500k+</option>
+        <option value="1000000" className="bg-slate-900">1M+</option>
+    </select>
+        )}
+        </div>
+        {/*niche */}
+        <div>
+            <button 
+    onClick={() => toggleSection("niche")} 
+    className='flex items-center justify-between w-full mb-3 text-slate-300 hover:text-white transition-colors'
+>
+    <label className='text-sm font-medium cursor-pointer uppercase tracking-wider'>Minimum Followers</label>
+    {/* Fixed: Now checks followers state for rotation */}
+    <ChevronDown className={`size-4 transition-transform duration-200 ${expandedSections.followers ? "rotate-180" : ""}`} />
+</button>
+
+{expandedSections.niche && (
+    <select 
+        value={filters.niche || ""}
+        onChange={(e) => onFiltersChange({...filters, niche: (e.target.value) || null })}
+        className='w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-slate-200 outline-none focus:ring-1 focus:ring-indigo-500 transition-all appearance-none cursor-pointer'>
+        <option value="0" className="bg-slate-900">Any amount</option>
+        <option value="1000" className="bg-slate-900">1k+</option>
+        <option value="10000" className="bg-slate-900">10k+</option>
+        <option value="50000" className="bg-slate-900">50k+</option>
+        <option value="100000" className="bg-slate-900">100k+</option>
+        <option value="500000" className="bg-slate-900">500k+</option>
+        <option value="1000000" className="bg-slate-900">1M+</option>
+    </select>
         )}
         </div>
       </div>
