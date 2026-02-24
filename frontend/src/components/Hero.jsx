@@ -1,26 +1,25 @@
 import React, { useState } from 'react';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Hero() {
-    const navigate=useNavigate()
-    const onSubmitHandler=(e)=>{
-        e.preventDefault()
-        navigate(`/marketplace?search=${input}`)
+  const navigate = useNavigate();
+  // 1. Create state to hold the search query
+  const [input, setInput] = useState('');
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    if (input.trim()) {
+      // 2. Navigate to marketplace with the search query
+      navigate(`/marketplace?search=${input}`);
     }
+  };
 
   return (
     <div className="relative w-full overflow-hidden bg-[#0a0a0a]">
       <section className="relative flex flex-col items-center text-white text-sm min-h-screen">
         
         {/* --- BACKGROUND SVG --- */}
-        <svg 
-          className="absolute -z-10 w-screen -mt-40 md:mt-0 opacity-50" 
-          width="1440" 
-          height="676" 
-          viewBox="0 0 1440 676" 
-          fill="none" 
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg className="absolute -z-10 w-screen -mt-40 md:mt-0 opacity-50" width="1440" height="676" viewBox="0 0 1440 676" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="-92" y="-948" width="1624" height="1624" rx="812" fill="url(#a)"/>
           <defs>
             <radialGradient id="a" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="rotate(90 428 292)scale(812)">
@@ -29,8 +28,6 @@ function Hero() {
             </radialGradient>
           </defs>
         </svg>
-
-        
 
         {/* --- HERO CONTENT --- */}
         <div className="flex flex-col items-center px-6">
@@ -50,13 +47,25 @@ function Hero() {
             Safe, fast, and secure transfers for Instagram, TikTok, and YouTube channels. Join the marketplace where creators trade.
           </p>
 
-            <div className="flex items-center mt-10 md:mt-15 gap-2 border border-white/10 bg-white/5 text-slate-200 rounded-full px-5 py-2 backdrop-blur-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="#6B7280">
+          {/* 3. Wrap in a <form> and add onSubmit */}
+          <form 
+            onSubmit={onSubmitHandler} 
+            className="flex items-center mt-10 md:mt-15 gap-2 border border-white/10 bg-white/5 text-slate-200 rounded-full px-5 py-2 backdrop-blur-sm w-full max-w-md"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 30" fill="#6B7280">
                 <path d="M13 3C7.489 3 3 7.489 3 13s4.489 10 10 10a9.95 9.95 0 0 0 6.322-2.264l5.971 5.971a1 1 0 1 0 1.414-1.414l-5.97-5.97A9.95 9.95 0 0 0 23 13c0-5.511-4.489-10-10-10m0 2c4.43 0 8 3.57 8 8s-3.57 8-8 8-8-3.57-8-8 3.57-8 8-8"/>
             </svg>
-            <input type="text" placeholder="Instagram Account" className="w-full h-full outline-none placeholder-gray-500 text-gray-500 bg-transparent text-sm" />
-            <button type="submit" className="bg-indigo-500 w-32 h-9 rounded-full text-sm text-white">Search</button>
-        </div>
+            <input 
+              type="text" 
+              placeholder="Search Instagram, TikTok..." 
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              className="w-full outline-none placeholder-gray-500 text-slate-200 bg-transparent text-sm" 
+            />
+            <button type="submit" className="bg-indigo-500 hover:bg-indigo-600 transition-colors w-32 h-9 rounded-full text-sm text-white shrink-0">
+              Search
+            </button>
+          </form>
         </div>
       </section>
     </div>
