@@ -35,6 +35,20 @@ const FilterSidebar = ({ showFilterPhone, setShowFilterPhone, filters, setFilter
     }))
     }
 
+    const onClearFilters=()=>{
+        if(search){
+            navigate("/marketplace")
+        }
+        setFilters({
+            platform:null,
+            maxPrice: 100000,
+            minFollowers:0,
+            niche:null,
+            verified:false,        
+            monetized:false
+        })
+    }
+
     const platforms=[
         {value:"youtube", label:"YouTube"},
         {value:"instagram", label:"Instagram"},
@@ -81,8 +95,7 @@ const FilterSidebar = ({ showFilterPhone, setShowFilterPhone, filters, setFilter
           
           <div className='flex items-center gap-2'>
             {/* Close Icon for Mobile */}
-            <X 
-              onClick={() => setShowFilterPhone(false)}
+            <X onClick={onClearFilters}
               className='size-7 text-slate-500 hover:text-white p-1.5 hover:bg-slate-800 rounded-full transition-all cursor-pointer'
             />
             
@@ -191,29 +204,53 @@ const FilterSidebar = ({ showFilterPhone, setShowFilterPhone, filters, setFilter
         </div>
         {/*niche */}
         <div>
-            <button 
+<button 
     onClick={() => toggleSection("niche")} 
     className='flex items-center justify-between w-full mb-3 text-slate-300 hover:text-white transition-colors'
 >
-    <label className='text-sm font-medium cursor-pointer uppercase tracking-wider'>Minimum Followers</label>
-    {/* Fixed: Now checks followers state for rotation */}
-    <ChevronDown className={`size-4 transition-transform duration-200 ${expandedSections.followers ? "rotate-180" : ""}`} />
+    <label className='text-sm font-medium cursor-pointer uppercase tracking-wider'>Niche</label>
+    <ChevronDown className={`size-4 transition-transform duration-200 ${expandedSections.niche ? "rotate-180" : ""}`} />
 </button>
 
 {expandedSections.niche && (
     <select 
         value={filters.niche || ""}
-        onChange={(e) => onFiltersChange({...filters, niche: (e.target.value) || null })}
-        className='w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-slate-200 outline-none focus:ring-1 focus:ring-indigo-500 transition-all appearance-none cursor-pointer'>
-        <option value="0" className="bg-slate-900">Any amount</option>
-        <option value="1000" className="bg-slate-900">1k+</option>
-        <option value="10000" className="bg-slate-900">10k+</option>
-        <option value="50000" className="bg-slate-900">50k+</option>
-        <option value="100000" className="bg-slate-900">100k+</option>
-        <option value="500000" className="bg-slate-900">500k+</option>
-        <option value="1000000" className="bg-slate-900">1M+</option>
+        onChange={(e) => onFiltersChange({ niche: e.target.value || null })}
+        className='w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-slate-200 outline-none focus:ring-1 focus:ring-indigo-500 transition-all appearance-none cursor-pointer'
+    >
+        <option value="" className="bg-slate-950">All niches</option>
+        {niche.map((niche) => (
+            <option key={niche.value} value={niche.value} className="bg-slate-950">
+                {niche.label}
+            </option>
+        ))}
     </select>
         )}
+        </div>
+        {/*verification */}
+        <div>
+<button 
+    onClick={() => toggleSection("status")} 
+    className='flex items-center justify-between w-full mb-3 text-slate-300 hover:text-white transition-colors'
+>
+    <label className='text-sm font-medium cursor-pointer uppercase tracking-wider'>Account Status</label>
+    <ChevronDown className={`size-4 transition-transform duration-200 ${expandedSections.niche ? "rotate-180" : ""}`} />
+</button>
+
+{expandedSections.status && (
+       <div className='space-y-3'>
+           <label className='flex items-center space-x-2 cursor-pointer'>
+                <input type="checkbox" checked={filters.verified || false}
+                onChange={(e)=>onFiltersChange({...filters,verified:e.target.checked})}/>
+                <span className='text-sm text-gray-400'>Verified accounts only</span>
+           </label>
+           <label className='flex items-center space-x-2 cursor-pointer'>
+               <input type="checkbox" checker={filters.monetized || false}
+               onChange={(e)=>onFiltersChange({...filters,monetized:e.target.checked})}/>
+               <span className='text-sm text-gray-400'>Monetized accounts only</span>
+           </label>
+       </div>
+        )}     
         </div>
       </div>
     </div>

@@ -1,12 +1,14 @@
 import React from 'react'
 import {ArrowLeftIcon, FilterIcon} from 'lucide-react'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate,useSearchParams} from 'react-router-dom'
 import { useState } from 'react' 
 import { useSelector } from 'react-redux'
 import ListingCard from '../components/ListingCard'
 import FilterSidebar from '../components/FilterSidebar'
 
 const Marketplace = () => {
+  const [searchParams]=useSearchParams()
+  const search=searchParams.get("search")
   const navigate = useNavigate()
   const [showFilterPhone, setShowFilterPhone] = useState(false)
   const [filters,setFilters]=useState({
@@ -19,7 +21,42 @@ const Marketplace = () => {
   })
 
   const {listings}=useSelector(state=>state.listing)
+
   const filteredListings=listings.filter((listing)=>{
+
+       if(filters.platform && filters.platform.length>0){
+         if(!filters.platform.includes(listing.platform)) return false
+       }
+
+       if(filters.maxPrice){
+         if(listing.price>filters.maxPrice) return false
+       }
+        
+       if(filters.minFollowers){
+         if(listing.followers_count<filters.minFollowers) return false
+       }
+
+       if(filters.niche && filters.niche.length>0){
+         if(!filters.niche.includes(listing.niche)) return false
+       }
+
+       if(filters.verified && listing.verified!==filters.verified) return false
+
+       if(filters.monetized && listing.monetized!==filters.monetized) return false
+
+       if(search){
+         const trimed=search.trim();
+         if(
+           !listing.title.toLowerCase().includes(trimed.toLowerCase()) &&
+           !listing.username.toLowerCase().includes(trimed.toLowerCase()) &&
+           !listing.description.toLowerCase().includes(trimed.toLowerCase()) &&
+           !listing.platform.toLowerCase().includes(trimed.toLowerCase()) &&
+           !listing.niche.toLowerCase().includes(trimed.toLowerCase()) 
+         )
+         return false
+       }
+       
+
        return true
   })
 
