@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom'
 import { useState } from 'react' 
 import { useSelector } from 'react-redux'
 import ListingCard from '../components/ListingCard'
+import FilterSidebar from '../components/FilterSidebar'
 
 const Marketplace = () => {
   const navigate = useNavigate()
@@ -45,7 +46,7 @@ const Marketplace = () => {
         </button>
       </div>
       <div className=' relative flex items-start justify-between gap-8 pb-8'>
-          <div>Filter</div>
+          <FilterSidebar setFilters={setFilters} filters={filters} setShowFilterPhone={setShowFilterPhone} showFilterPhone={showFilterPhone}/>
           <div className='flex-1 grid grid-cols-1 md:grid-cols-2 gap-4'>
             {filteredListings.sort((a,b)=>a.featured ? -1 : b.featured ? 1 :0 ).
             map((listing,index)=>(
