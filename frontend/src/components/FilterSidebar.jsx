@@ -1,11 +1,10 @@
-import { Filter, X } from 'lucide-react'
-import React from 'react'
-import { useState } from 'react'
+import { ChevronDown, Filter, X } from 'lucide-react'
+import React, { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 const FilterSidebar = ({ showFilterPhone, setShowFilterPhone, filters, setFilters }) => {
     const navigate=useNavigate()
-    const [searchParams,useSearchParams]=useSearchParams()
+    const [searchParams,setSearchParams]=useSearchParams()
     const [search,setSearch]=useState(searchParams.get("search") ||"")
 
     const onChangeSearch=(e)=>{
@@ -17,6 +16,27 @@ const FilterSidebar = ({ showFilterPhone, setShowFilterPhone, filters, setFilter
             setSearch("")
         }
     }
+    const [expandedSections,setExpandedSections]=useState({
+        platform:true,
+        price:true,
+        followers:true,
+        niche:true,
+        status:true,
+    })
+    const toggleSection=(section)=>{
+        setExpandedSections((prev)=>({...prev,[section]: !prev[section]}))
+    }
+
+    const platforms=[
+        {value:"youtube", label:"YouTube"},
+        {value:"instagram", label:"Instagram"},
+        {value:"tiktok", label:"TikTok"},
+        {value:"facebook", label:"Facebook"},
+        {value:"twitter", label:"Twitter"},
+        {value:"linkedin", label:"LinkedIn"},
+        {value:"twitch", label:"Twitch"},
+        {value:"discord", label:"Discord"},
+    ]
   return (
     <div className={` 
       ${showFilterPhone ? "max-sm:fixed" : "max-sm:hidden"}
@@ -53,9 +73,16 @@ const FilterSidebar = ({ showFilterPhone, setShowFilterPhone, filters, setFilter
       no-scrollbar'>
         <div className='flex items-center justify-between'>
             <input type="text" placeholder='Search by username, platform, niche etc'
-            className='w-full text-sm px-3 py-2 border border-gray-300 rounded-md outline-indigo-500
-            onChange={onChangeSearch} value={search}'/>
-
+            className='w-full text-sm px-3 py-2 border border-gray-300 rounded-md outline-indigo-500'
+            onChange={onChangeSearch} value={search}/>
+        </div>
+        <div>
+            <button 
+                onClick={() => toggleSection("platform")} 
+                className='flex items-center justify-between w-full mb-3 text-slate-300 hover:text-white transition-colors'>
+                <label className='text-sm font-medium cursor-pointer uppercase tracking-wider'>Platform</label>
+                <ChevronDown className={`size-4 transition-transform duration-200 ${expandedSections.platform ? "rotate-180" : ""}`} />
+            </button>
         </div>
 
       </div>
