@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getProfileLink, platformIcons } from '../assets/assets';
 import { useSelector } from 'react-redux';
-import { ArrowLeftIcon, ArrowUpRightFromSquare, Calendar, CheckCircle2, ChevronsLeftIcon, ChevronsRightIcon, DollarSign, Eye, LineChart, Loader2Icon, MapPin, Users } from 'lucide-react';
+import { ArrowLeftIcon, ArrowUpRightFromSquare, Calendar, CheckCircle2, ChevronsLeftIcon, ChevronsRightIcon, DollarSign, Eye, LineChart, Loader2Icon, MapPin, MessageSquareMoreIcon, ShoppingBagIcon, Users } from 'lucide-react';
 
 function ListingDetails() {
   const navigate = useNavigate()
@@ -196,14 +196,58 @@ function ListingDetails() {
                 <p className='font-medium'>
                    {listing.platformAssured ? "Yes" : "No"}</p>
                </div>
+                <div>
+                <p className='text-gray-400'>Monetization</p>
+                <p className='font-medium'>
+                   {listing.monetized ? "Enabled" : "Disabled"}</p>
+               </div>
+                <div>
+                <p className='text-gray-400'>Status</p>
+                <p className='font-medium capitalize'>
+                   {listing.status}</p>
+               </div>
             </div>
           </div>
 
       </div>
         {/*seller info and purchase option */}
-      <div></div>
+      <div className='bg-voilet min-w-full md:min-w-[370px] rounded-xl border
+      border-gray-400 p-5 max-md:mb-10'>
+        <h4 className='font-semibold text-white mb-4'>Seller Information</h4>
+        <div className='flex items-center gap-3 mb-2'>
+          <img src={listing.owner?.image} alt="seller image" className='size-10 rounded-full'/>
+          <div>
+            <p className='font-medium text-gray-500'>{listing.owner?.name}</p>
+            <p className='text-sm text-gray-300'>{listing.owner?.email}</p>
+          </div>
+
+        </div>
+        <div className='flex items-center justify-between text-sm text-gray-500 mb-4'>
+          <p>Member since <span className='font-medium'>{new Date(listing.owner?.createdAt).
+          toLocaleDateString()}</span></p>
+        </div>
+        
+        <button className='w-full bg-indigo-500 text-white py-2 rounded-lg
+        hover:bg-indigo-600 transition text-sm font-medium flex items-center
+        justify-center gap-2'>
+          <MessageSquareMoreIcon className='size-4'/>Chat
+        </button>
+        {listing.isCredentialChanged && (
+          <button className='w-full bg-purple-500 text-white mt-3 py-2 rounded-lg
+        hover:bg-purple-600 transition text-sm font-medium flex items-center
+        justify-center gap-2'>
+          <ShoppingBagIcon className='size-4'/>Purchase
+        </button>
+        )
+      }
+      </div>
     </div>
-    
+    {/*footer */}
+    <div className='bg-voilet border-t border-gray-400 p-4 text-center mt-28'>
+            <p className='text-sm text-gray-400'>
+              © 2026 <span className='text-indigo-400'>SellUp</span>. All rights reserved.
+            </p>
+    </div>
   </div>
 ) : (
   <div className='h-screen flex justify-center items-center bg-[#050505]'>

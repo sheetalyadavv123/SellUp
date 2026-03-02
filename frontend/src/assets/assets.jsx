@@ -61,7 +61,7 @@ export const dummyUsers = [
     {
         id: 'user_1',
         email: 'creator1@example.com',
-        name: 'Alex Johnson',
+        name: 'Archit Shukla',
         image: 'https://randomuser.me/api/portraits/men/32.jpg',
         createdAt: 'Thu Oct 16 2025 12:52:10 GMT+0530 (India Standard Time)',
         updatedAt: 'Thu Oct 16 2025 12:52:10 GMT+0530 (India Standard Time)',
