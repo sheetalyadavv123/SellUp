@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getProfileLink, platformIcons } from '../assets/assets';
 import { useSelector } from 'react-redux';
-import { ArrowLeftIcon, ArrowUpRightFromSquare, CheckCircle2, ChevronsLeftIcon, ChevronsRightIcon, DollarSign, Loader2Icon } from 'lucide-react';
+import { ArrowLeftIcon, ArrowUpRightFromSquare, Calendar, CheckCircle2, ChevronsLeftIcon, ChevronsRightIcon, DollarSign, Eye, LineChart, Loader2Icon, MapPin, Users } from 'lucide-react';
 
 function ListingDetails() {
   const navigate = useNavigate()
@@ -123,8 +123,80 @@ function ListingDetails() {
           )}
 
           {/*account metrics */}
-          <div className='bg-white rounded-xl border border-gray-200 mb-5'>
+          <div className='bg-voilet rounded-xl border border-gray-200 mb-5'>
+             <div className='p-4 border-b border-gray-100'>
+              <h4 className='font-semibold text-white'>Account Metrics</h4>
+             </div>
+             <div className='grid grid-cols-2 md:grid-cols-4 p-4 text-center'>
+                 <div>
+                  <Users className='mx-auto text-gray-400 w-5 h-5 mb-1'/>
+                  <p className='font-semibold text-white'>
+                       {listing.followers_count ?.toLocaleString()}
+                  </p>
+                  <p className='text-xs text-gray-500'>Followers</p>
+                 </div>
 
+                 <div>
+                  <LineChart className='mx-auto text-gray-400 w-5 h-5 mb-1'/>
+                  <p className='font-semibold text-white'>
+                       {listing.engagement_rate}%
+                  </p>
+                  <p className='text-xs text-gray-500'>Engagement</p>
+                 </div>
+
+                 <div>
+                  <Eye className='mx-auto text-gray-400 w-5 h-5 mb-1'/>
+                  <p className='font-semibold text-white'>
+                       {listing.monthly_views?.toLocaleString()}
+                  </p>
+                  <p className='text-xs text-gray-500'>Monthly views</p>
+                 </div>
+
+                  <div>
+                  <Calendar className='mx-auto text-gray-400 w-5 h-5 mb-1'/>
+                  <p className='font-semibold text-white'>
+                       {new Date(listing.createdAt).toLocaleDateString()}
+                  </p>
+                  <p className='text-xs text-gray-500'>Listed</p>
+                 </div>
+
+             </div>
+          </div>
+
+          {/*description */}
+          <div className='bg-voilet rounded-xl border border-gray-200 mb-5'>
+            <div className='p-4 border-b border-gray-100'>
+              <h4 className='font-semibold text-white'>Description</h4>
+            </div>
+            <div className='p-4 text-sm text-gray-400'>{listing.description}</div>
+          </div>
+
+          {/*additional details */}
+          <div className='bg-voilet rounded-xl border border-gray-200 mb-5'>
+            <div className='p-4 border-b border-gray-100'>
+              <h4 className='font-semibold text-white'>Additional Details</h4>
+            </div>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6 p-4 text-sm'>
+               <div>
+                <p className='text-gray-400'>Niche</p>
+                <p className='font-medium capitalize'>{listing.niche}</p>
+               </div>
+               <div>
+                <p className='text-gray-400'>Primary country</p>
+                <p className='font-medium flex items-center'>
+                  <MapPin className='size-4 mr-1 text-gray-300'/> {listing.country}</p>
+               </div>
+               <div>
+                <p className='text-gray-400'>Audience Age</p>
+                <p className='font-medium'>
+                   {listing.age_range}</p>
+               </div>
+               <div>
+                <p className='text-gray-400'>Platform verified</p>
+                <p className='font-medium'>
+                   {listing.platformAssured ? "Yes" : "No"}</p>
+               </div>
+            </div>
           </div>
 
       </div>
