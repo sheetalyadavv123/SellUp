@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getProfileLink, platformIcons } from '../assets/assets';
 import { useSelector } from 'react-redux';
-import { ArrowLeftIcon, ArrowUpRightFromSquare, CheckCircle2, DollarSign, Loader2Icon } from 'lucide-react';
+import { ArrowLeftIcon, ArrowUpRightFromSquare, CheckCircle2, ChevronsLeftIcon, ChevronsRightIcon, DollarSign, Loader2Icon } from 'lucide-react';
 
 function ListingDetails() {
   const navigate = useNavigate()
@@ -14,6 +14,9 @@ function ListingDetails() {
 
   const { listingId } = useParams()
   const { listings } = useSelector((state) => state.listing)
+
+  const [current,setCurrent]=useState(0)
+  const images=listing?.images || []
 
   useEffect(() => {
     const listing = listings.find((listing) => listing.id == listingId);
@@ -36,10 +39,11 @@ function ListingDetails() {
       <div className='flex-1 max-md:w-full'>
           
           <div className='bg-slate-950 rounded-xl border border-slate-800 p-6 mb-5'>
-              <div className='flex items-start gap-3'>
-                
-                
-                <div className='p-2 rounded-xl bg-slate-900 border border-slate-800'>
+
+            <div className='flex flex-col md:flex-row md:items-end md:justify-between gap-4'>
+
+            <div className='flex items-start gap-3'>
+              <div className='p-2 rounded-xl bg-slate-900 border border-slate-800'>
                   {platformIcons[listing.platform]}
                 </div>
                 <div>
@@ -68,8 +72,47 @@ function ListingDetails() {
                   </div>
                 </div>
               </div>
+              <div className='text-right'>
+                <h3>
+                  {currency}
+                  {listing.price?.toLocaleString()}
+                </h3>
+                <p className='text-sm text-gray-500'>USD</p>
+                
+
+              </div>
+            </div>
+
+
 
           </div>
+          {/*screenshot section */}
+          {images?.length>0 && (
+            <div className='bg-voilet rounded-xl border bprder-gray-200 mb-5 overflow-hidden'>
+              <div className='p-4'>
+                <h4 className='font-semibold text-gray-600'>Screenshots and Proofs</h4>
+              </div>
+              {/*slider */}
+              <div className='relative w-full aspect-video overflow-hidden'>
+                <div className='flex transition-transform duration-300 ease-in-out' style={{transform:`translateX(-${current*100}%)`}}>
+                  {images.map((img,index)=>(
+                    <img key={index} src={img} alt="Listing proof" className='w-full shrink-0'/>
+                  ))}
+                </div>
+                {/*navigation buttons */}
+                <button className='absolute left-3 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white p-2 rounded-full shadow'>
+                  <ChevronsLeftIcon className='w-5 h-5 text-gray-700'/>
+                </button>
+
+                 <button className='absolute right-3 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white p-2 rounded-full shadow'>
+                  <ChevronsRightIcon className='w-5 h-5 text-gray-700'/>
+                </button>
+
+
+              </div>
+            </div>
+          )}
+
       </div>
         {/*seller info and purchase option */}
       <div></div>
