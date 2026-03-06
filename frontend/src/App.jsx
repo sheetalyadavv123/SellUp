@@ -10,6 +10,7 @@ import MyOrders from './pages/MyOrders'
 import Loading from './pages/Loading'
 import {useLocation} from 'react-router-dom' 
 import Navbar from './components/Navbar'
+import Chatbox from './components/Chatbox'
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path='/my-orders' element={<MyOrders/>}/>
         <Route path='/loading' element={<Loading/>}/>
       </Routes>
+      <Chatbox/>
     </div>
   )
 }
