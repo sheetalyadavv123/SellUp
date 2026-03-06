@@ -21,6 +21,14 @@ function ListingDetails() {
   const prevSlide=()=>setCurrent((prev)=>(prev===0 ? images.length-1:prev-1))
   const nextSlide=()=>setCurrent((prev)=>(prev=== images.length-1 ? 0 :prev+1))
 
+  const purchaseAccount=async()=>{
+
+  }
+
+  const loadChatbox=()=>{
+     
+  }
+
   useEffect(() => {
     const listing = listings.find((listing) => listing.id == listingId);
     if (listing) {
@@ -227,13 +235,13 @@ function ListingDetails() {
           toLocaleDateString()}</span></p>
         </div>
         
-        <button className='w-full bg-indigo-500 text-white py-2 rounded-lg
+        <button onClick={loadChatbox} className='w-full bg-indigo-500 text-white py-2 rounded-lg
         hover:bg-indigo-600 transition text-sm font-medium flex items-center
         justify-center gap-2'>
           <MessageSquareMoreIcon className='size-4'/>Chat
         </button>
         {listing.isCredentialChanged && (
-          <button className='w-full bg-purple-500 text-white mt-3 py-2 rounded-lg
+          <button onClick={purchaseAccount} className='w-full bg-purple-500 text-white mt-3 py-2 rounded-lg
         hover:bg-purple-600 transition text-sm font-medium flex items-center
         justify-center gap-2'>
           <ShoppingBagIcon className='size-4'/>Purchase
