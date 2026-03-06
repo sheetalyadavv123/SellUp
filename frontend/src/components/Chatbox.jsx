@@ -1,34 +1,115 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import { Loader2Icon, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { clearChat } from '../app/features/chatSlice';
+import { format } from 'date-fns'
+import { dummyChats } from "../assets/assets";
 
 function Chatbox() {
-    const {listing,isOpen,chatId}=useSelector((state)=>state.chat)
-    const user={id:'user_2'};
-    const [chat, setChat] = useState(null);
-    const [messages, setMessages] = useState([]);
-    const [newMessage, setNewMessage] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
-    const [isSending, setIsSending] = useState(false);
+  const { listing, isOpen, chatId } = useSelector((state) => state.chat);
+  const dispatch = useDispatch();
 
-    const fetchChat = async () => {
-       setChat(dummyChats[0]);
-       setMessages(dummyChats[0].messages);
-       setIsLoading(false);
+  const user = { id: 'user_2' };
+
+  const [chat, setChat] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSending, setIsSending] = useState(false);
+
+  const fetchChat = async () => {
+    setChat(dummyChats[0]);
+    setMessages(dummyChats[0].messages);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (listing ) {
+      fetchChat();
     }
+  }, [listing]);
 
-    useEffect(() => {
-      if (listing) {
-         fetchChat();
-       }
-     }, [listing])
+  useEffect(() => {
+    if (!isOpen) {
+      setChat(null);
+      setMessages([]);
+      setIsLoading(true);
+      setNewMessage("");
+      setIsSending(false);
+    }
+  }, [isOpen]);
 
-     if(!isOpen || !listing) return null
+  if (!isOpen || !listing) return null;
 
   return (
-    <div>
+    <div className='fixed inset-0 bg-black/70 backdrop-blur z-[100] flex items-center justify-center sm:p-4'>
       
+      <div className='bg-[#0f111a] sm:rounded-xl shadow-2xl w-full max-w-2xl sm:h-[520px] flex flex-col border border-slate-800 overflow-hidden'>
+        
+        {/* Header */}
+        <div className='bg-gradient-to-r from-indigo-600 to-indigo-400 text-white p-4 flex items-center justify-between'>
+          
+          <div className='flex-1 min-w-0'>
+            <h3 className='font-semibold text-lg truncate'>{listing?.title}</h3>
+
+            <p className='text-xs opacity-90'>
+              {user.id === listing?.ownerId
+                ? `chatting with buyer (${chat?.chatUser?.name || 'Loading...'})`
+                : `chatting with seller (${chat?.ownerUser?.name || 'Loading...'})`}
+            </p>
+          </div>
+
+          <button
+            onClick={() => dispatch(clearChat())}
+            className='ml-4 p-1 hover:bg-white/20 rounded-lg transition-colors'
+          >
+            <X className='w-5 h-5' />
+          </button>
+
+        </div>
+
+        {/* Messages area */}
+        <div className='flex-1 overflow-y-auto p-4 space-y-4 bg-[#0f111a]'>
+
+          {isLoading ? (
+            <div className='flex items-center justify-center h-full'>
+              <Loader2Icon className='size-6 animate-spin text-indigo-400' />
+            </div>
+
+          ) : messages.length === 0 ? (
+            <div className='flex items-center justify-center h-full'>
+              <div className='text-center'>
+                <p className='text-gray-400 mb-2'>No messages yet</p>
+                <p className='text-sm text-gray-500'>Start the conversation!</p>
+              </div>
+            </div>
+
+          ) : (
+            messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex ${message.sender_id === user.id ? "justify-end" : "justify-start"}`}>
+
+                <div
+                  className={`max-w-[70%] rounded-lg p-3 pb-1 ${
+                    message.sender_id === user.id ? "bg-indigo-600 text-white" : "bg-[#1a1d2e] border border-slate-700 text-gray-200" }`}>
+                    <p className='text-sm break-words whitespace-pre-wrap'>{message.message}</p>
+
+                  <p className={`text-[10px] mt-1 ${
+                      message.sender_id === user.id ? "text-indigo-200": "text-gray-400"}`}>
+                      {format(new Date(message.createdAt),"MMM dd 'at' h:mm a")}</p>
+                  </div>
+
+              </div>
+            ))
+          )}
+
+        </div>
+
+      </div>
+
     </div>
-  )
+  );
 }
 
-export default Chatbox
+export default Chatbox;
