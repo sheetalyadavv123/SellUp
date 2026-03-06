@@ -5,6 +5,7 @@ import { clearChat } from '../app/features/chatSlice';
 import { format } from 'date-fns'
 import { dummyChats } from "../assets/assets";
 
+
 function Chatbox() {
   const { listing, isOpen, chatId } = useSelector((state) => state.chat);
   const dispatch = useDispatch();
@@ -21,6 +22,13 @@ function Chatbox() {
   useEffect(()=>{
     messagesEndRef.current?.scrollIntoView({behavior: "smooth"})
     },[messages.length])
+
+    const handleSendMessage=async(e)=>{
+       e.preventDefault();
+       if(!newMessage.trim() || isSending) return;
+       setMessages([...messages,{id:Date.now(),chatId:chat.id, sender_id:user.id,message:newMessage,createdAt:new Date()}]);
+       setNewMessage("")
+    }
 
   const fetchChat = async () => {
     setChat(dummyChats[0]);
@@ -113,12 +121,22 @@ function Chatbox() {
         {/*input area */}
         {chat?.listing?.status==="active" ?
         (
-            <form className='p-4 bg-[#1a1d2e] border-t border-gray-200 rounded-b-lg'>
+            <form onSubmit={handleSendMessage} className='p-4 bg-[#1a1d2e] border-t border-gray-200 rounded-b-lg'>
                 <div className='flex items-end space-x-2'>
-                    <textarea placeholder='Type your messages...' className='
+                    <textarea 
+                    value={newMessage}
+                    onChange={(e)=>setNewMessage(e.target.value)}
+                    onKeyDown={(e)=>{
+                        if(e.key==="Enter" && !e.shiftKey){
+                            e.preventDefault();
+                            handleSendMessage(e);
+                        }
+                    }}
+                    placeholder='Type your messages...' className='
                     flex-1 resist-none border-gray-300 rounded-lg px-4 py-2
                     focus:outline-indigo-500 max-h-32' rows={1}/>
-                    <button type='submit' className='bg-indigo-600 hover:bg-indigo-700 text-white p-2.5 rounded-lg disabled:opacity-50 transition-colors'>
+
+                    <button disabled={!newMessage.trim() || isSending} type='submit' className='bg-indigo-600 hover:bg-indigo-700 text-white p-2.5 rounded-lg disabled:opacity-50 transition-colors'>
                         {isSending ? <Loader2Icon className='w-5 h-5 animate-spin'/>
                         :<Send className='w-5 h-5'/>}
                     </button>
@@ -128,7 +146,7 @@ function Chatbox() {
         :
         (
             <div className='p-4 bg-[#1a1d2e] border-gray-200 rounded-b-lg'>
-                <p>{chat? `Listing is ${chat?.listing?.status}`: "Loading chat..."}</p>
+                <p className='text-sm text-gray-600 text-center'>{chat? `Listing is ${chat?.listing?.status}`: "Loading chat..."}</p>
             </div>
         )
     }
