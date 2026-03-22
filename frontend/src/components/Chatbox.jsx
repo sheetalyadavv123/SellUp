@@ -1,10 +1,9 @@
-import { Loader2Icon, X } from 'lucide-react';
-import React, { useState, useEffect, useRef} from 'react';
+import { Loader2Icon, X, Send } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearChat } from '../app/features/chatSlice';
 import { format } from 'date-fns'
 import { dummyChats } from "../assets/assets";
-
 
 function Chatbox() {
   const { listing, isOpen, chatId } = useSelector((state) => state.chat);
@@ -18,17 +17,29 @@ function Chatbox() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
 
-  const messagesEndRef=useRef(null)
-  useEffect(()=>{
-    messagesEndRef.current?.scrollIntoView({behavior: "smooth"})
-    },[messages.length])
+  const messagesEndRef = useRef(null);
 
-    const handleSendMessage=async(e)=>{
-       e.preventDefault();
-       if(!newMessage.trim() || isSending) return;
-       setMessages([...messages,{id:Date.now(),chatId:chat.id, sender_id:user.id,message:newMessage,createdAt:new Date()}]);
-       setNewMessage("")
-    }
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages.length]);
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (!newMessage.trim() || isSending) return;
+
+    setIsSending(true);
+
+    setMessages([...messages, {
+      id: Date.now(),
+      chatId: chat?.id,
+      sender_id: user.id,
+      message: newMessage,
+      createdAt: new Date()
+    }]);
+
+    setNewMessage("");
+    setIsSending(false);
+  };
 
   const fetchChat = async () => {
     setChat(dummyChats[0]);
@@ -37,7 +48,7 @@ function Chatbox() {
   };
 
   useEffect(() => {
-    if (listing ) {
+    if (listing) {
       fetchChat();
     }
   }, [listing]);
@@ -105,51 +116,60 @@ function Chatbox() {
 
                 <div
                   className={`max-w-[70%] rounded-lg p-3 pb-1 ${
-                    message.sender_id === user.id ? "bg-indigo-600 text-white" : "bg-[#1a1d2e] border border-slate-700 text-gray-200" }`}>
-                    <p className='text-sm break-words whitespace-pre-wrap'>{message.message}</p>
+                    message.sender_id === user.id ? "bg-indigo-600 text-white" : "bg-[#1a1d2e] border border-slate-700 text-gray-200"
+                  }`}>
+                  <p className='text-sm break-words whitespace-pre-wrap'>{message.message}</p>
 
                   <p className={`text-[10px] mt-1 ${
-                      message.sender_id === user.id ? "text-indigo-200": "text-gray-400"}`}>
-                      {format(new Date(message.createdAt),"MMM dd 'at' h:mm a")}</p>
-                  </div>
+                    message.sender_id === user.id ? "text-indigo-200" : "text-gray-400"
+                  }`}>
+                    {format(new Date(message.createdAt), "MMM dd 'at' h:mm a")}
+                  </p>
+                </div>
 
               </div>
             ))
           )}
-          <div ref={messagesEndRef}/>
+          <div ref={messagesEndRef} />
         </div>
-        {/*input area */}
-        {chat?.listing?.status==="active" ?
-        (
-            <form onSubmit={handleSendMessage} className='p-4 bg-[#1a1d2e] border-t border-gray-200 rounded-b-lg'>
-                <div className='flex items-end space-x-2'>
-                    <textarea 
-                    value={newMessage}
-                    onChange={(e)=>setNewMessage(e.target.value)}
-                    onKeyDown={(e)=>{
-                        if(e.key==="Enter" && !e.shiftKey){
-                            e.preventDefault();
-                            handleSendMessage(e);
-                        }
-                    }}
-                    placeholder='Type your messages...' className='
-                    flex-1 resist-none border-gray-300 rounded-lg px-4 py-2
-                    focus:outline-indigo-500 max-h-32' rows={1}/>
 
-                    <button disabled={!newMessage.trim() || isSending} type='submit' className='bg-indigo-600 hover:bg-indigo-700 text-white p-2.5 rounded-lg disabled:opacity-50 transition-colors'>
-                        {isSending ? <Loader2Icon className='w-5 h-5 animate-spin'/>
-                        :<Send className='w-5 h-5'/>}
-                    </button>
-                </div>
-            </form>
-        )
-        :
-        (
-            <div className='p-4 bg-[#1a1d2e] border-gray-200 rounded-b-lg'>
-                <p className='text-sm text-gray-600 text-center'>{chat? `Listing is ${chat?.listing?.status}`: "Loading chat..."}</p>
+        {/* Input area */}
+        {chat?.listing?.status === "active" ? (
+          <form onSubmit={handleSendMessage} className='p-4 bg-[#1a1d2e] border-t border-gray-200 rounded-b-lg'>
+            <div className='flex items-end space-x-2'>
+              <textarea
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage(e);
+                  }
+                }}
+                placeholder='Type your messages...'
+                className='flex-1 resize-none border-gray-300 rounded-lg px-4 py-2 focus:outline-indigo-500 max-h-32'
+                rows={1}
+              />
+
+              <button
+                disabled={!newMessage.trim() || isSending}
+                type='submit'
+                className='bg-indigo-600 hover:bg-indigo-700 text-white p-2.5 rounded-lg disabled:opacity-50 transition-colors'
+              >
+                {isSending
+                  ? <Loader2Icon className='w-5 h-5 animate-spin' />
+                  : <Send className='w-5 h-5' />}
+              </button>
             </div>
-        )
-    }
+          </form>
+        ) : (
+          <div className='p-4 bg-[#1a1d2e] border-gray-200 rounded-b-lg'>
+            <p className='text-sm text-gray-600 text-center'>
+              {chat ? `Listing is ${chat?.listing?.status}` : "Loading chat..."}
+            </p>
+          </div>
+        )}
+
       </div>
     </div>
   );
