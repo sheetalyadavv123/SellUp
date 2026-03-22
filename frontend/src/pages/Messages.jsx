@@ -1,27 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { dummyChats } from "../assets/assets";
 import { MessageCircle, Search } from 'lucide-react';
-import {format, isToday, isYesterday, parseISO} from 'date-fns'
-
-const formatTime=(dateString)=>{
-  if(!dateString) return;
-  const date=parseISO(dateString)
-
-  if(isToday(date)){
-    return 'Today' + format(date,"HH:mm");
-  }
-  if(isYesterday(date)){
-    return 'Yesterday' + format(date,"HH:mm");
-  }
-  return format(date,"MMM d")
-}
+import { format, isToday, isYesterday, parseISO } from 'date-fns';
+import { useDispatch } from 'react-redux';
+import { setChat } from '../app/features/chatSlice';
 
 function Messages() {
+
+  const dispatch = useDispatch();
   const user = { id: "user_1" };
 
   const [chats, setChats] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+
+  const formatTime = (dateString) => {
+    if (!dateString) return;
+    const date = parseISO(dateString);
+
+    if (isToday(date)) {
+      return 'Today ' + format(date, "HH:mm");
+    }
+    if (isYesterday(date)) {
+      return 'Yesterday ' + format(date, "HH:mm");
+    }
+    return format(date, "MMM d");
+  };
+
+  const filteredChats = useMemo(() => {
+    const query = searchQuery.toLowerCase();
+
+    return chats.filter((chat) => {
+      const chatUser = chat.chatUser?.id === user?.id
+        ? chat.ownerUser
+        : chat.chatUser;
+
+      return chat.listing?.title?.toLowerCase().includes(query) ||
+        chatUser?.name?.toLowerCase().includes(query);
+    });
+
+  }, [chats, searchQuery]);
+
+  const handleOpenChat = (chat) => {
+    dispatch(setChat({ listing: chat.listing, chatId: chat.id }));
+  };
 
   const fetchUserChats = async () => {
     setChats(dummyChats);
@@ -61,7 +83,7 @@ function Messages() {
         {/* Chat List */}
         {loading ? (
           <div className='text-center text-gray-400 py-20'>Loading messages...</div>
-        ) : chats.length === 0 ? (
+        ) : filteredChats.length === 0 ? (
           <div className='bg-[#1a1d2e] rounded-lg border border-gray-700 p-16 text-center'>
             <div className='w-16 h-16 bg-[#2a2f45] rounded-full flex items-center justify-center mx-auto mb-4'>
               <MessageCircle className='w-8 h-8 text-gray-400' />
@@ -78,24 +100,23 @@ function Messages() {
         ) : (
           <div className='bg-[#1a1d2e] rounded-lg border border-gray-700 divide-y divide-gray-700'>
             {
-              chats.map((chat) => {
+              filteredChats.map((chat) => {
                 const chatUser = chat.chatUser?.id === user?.id
                   ? chat.ownerUser
                   : chat.chatUser;
 
                 return (
                   <button
+                    onClick={() => handleOpenChat(chat)}
                     key={chat.id}
                     className='w-full p-4 hover:bg-[#2a2f45] transition-colors text-left'
                   >
                     <div className='flex items-start space-x-4'>
-                      <div className='flex-shrink-0'>
-                        <img
-                          src={chatUser?.image}
-                          alt={chatUser?.name}
-                          className='w-12 h-12 rounded-lg object-cover'
-                        />
-                      </div>
+                      <img
+                        src={chatUser?.image}
+                        alt={chatUser?.name}
+                        className='w-12 h-12 rounded-lg object-cover'
+                      />
 
                       <div className='flex-1 min-w-0'>
                         <div className='flex items-center justify-between mb-1'>
@@ -103,7 +124,7 @@ function Messages() {
                             {chat.listing?.title}
                           </h3>
                           <span className='text-xs text-gray-400 ml-2'>
-                            {chat.updatedAt}
+                            {formatTime(chat.updatedAt)}
                           </span>
                         </div>
 
