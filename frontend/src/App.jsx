@@ -11,12 +11,14 @@ import Loading from './pages/Loading'
 import {useLocation} from 'react-router-dom' 
 import Navbar from './components/Navbar'
 import Chatbox from './components/Chatbox'
+import {Toaster} from 'react-hot-toast'
 
 
 function App() {
   const {pathname}=useLocation();
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-indigo-500/30">
+      <Toaster/>
     
       {!pathname.includes('/admin')&& <Navbar/>}
       <Routes>

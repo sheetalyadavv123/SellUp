@@ -5,22 +5,17 @@ import StatCard from '../components/StatCard';
 import { 
   Plus, Eye, CheckCircle, Clock, DollarSign, WalletIcon, 
   ArrowDownCircleIcon, CoinsIcon, PlusIcon, StarIcon,
-  Instagram, Twitter, Youtube, Facebook, MessageSquare, 
-  LockIcon,
-  Users,
-  BanIcon,
-  XCircle,
-  TrendingUp,
-  TrashIcon,
-  Edit,
-  EyeOffIcon,
-  EyeIcon
-} from 'lucide-react'; 
+  Instagram, Twitter, Youtube, Facebook, MessageSquare, LockIcon,Users,BanIcon,XCircle,
+  TrendingUp,TrashIcon,Edit,EyeOffIcon,EyeIcon} from 'lucide-react'; 
 
 const MyListings = () => {
   const { userListings = [], balance = { earned: 0, withdrawn: 0, available: 0 } } = useSelector((state) => state.listing);
   const currency = import.meta.env.VITE_CURRENCY || '$';
   const navigate = useNavigate();
+
+  const [showCredentialSubmission, setShowCredentialSubmission]=useState(null)
+  const [showWithdrawal, setshowWithdrawal]=useState(null)
+
 
   const platformIcons = {
     instagram: <Instagram className="size-6 text-pink-500" />,
@@ -69,6 +64,17 @@ const MyListings = () => {
         return "text-gray-400";
     }
   }
+
+  const toggleStatus=async(listingId)=>{
+
+  }
+  const deleteListing=async(listingId)=>{
+
+  }
+  const markAsFeatured=async(listingId)=>{
+
+  }
+
 
   return (
     <div className='min-h-screen bg-[#0f111a] text-gray-100 px-6 md:px-16 lg:px-24 xl:px-32 pt-8 pb-10'>
@@ -174,7 +180,9 @@ const MyListings = () => {
                               </div>
                           </div>
                           {listing.status === "active" && (
-                            <StarIcon size={18}
+                            <StarIcon
+                            onClick={()=>markAsFeatured(listingId)}
+                            size={18}
                             className={`text-yellow-500 cursor-pointer ${
                               listing.featured && "fill-yellow-500"
                             }`}/>
@@ -208,21 +216,25 @@ const MyListings = () => {
                   </span>
                   <div className='flex items-center space-x-2'>
                       {listing.status!=="sold" && (
-                        <button className='p-2 border border-gray-300 rounded-lg 
+                        <button onClick={()=>deleteListing(listing.id)} className='p-2 border border-gray-300 rounded-lg 
                         hover:bg-gray-50 hover:text-red-500'>
                            <TrashIcon className='size-4'/>
                         </button>
                       )}
-                      <button className='p-2 border border-gray-300 rounded-lg 
+
+                      <button onClick={()=>navigate(`/edit-listing/${listing.id}`)} className='p-2 border border-gray-300 rounded-lg 
                         hover:bg-gray-50 hover:text-indigo-600'>
                         <Edit className='size-4'/>
                       </button>
-                      <button>
+
+                      <button onClick={()=>toggleStatus(listingId)} className='p-2 border border-gray-300 rounded-lg 
+                        hover:bg-gray-50 hover:text-purple-600'>
                         {listing.status === "active" && (<EyeOffIcon
                         className='size-4'/>)}
                         {listing.status !== "active" && (<EyeIcon
                         className='size-4'/>)}
                       </button>
+
                   </div>
                 </div>
                 </div>
@@ -231,6 +243,12 @@ const MyListings = () => {
             ))}
         </div>
       )}
+       {/* Footer */}
+      <div className='border-t border-slate-800 p-8 text-center mt-28'>
+        <p className='text-sm text-gray-500'>
+          © 2026 <span className='text-indigo-400'>SellUp</span>. All rights reserved.
+        </p>
+      </div>
     </div>
   );
 };
