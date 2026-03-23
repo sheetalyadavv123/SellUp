@@ -6,7 +6,8 @@ import {
   Plus, Eye, CheckCircle, Clock, DollarSign, WalletIcon, 
   ArrowDownCircleIcon, CoinsIcon, PlusIcon, StarIcon,
   Instagram, Twitter, Youtube, Facebook, MessageSquare, 
-  LockIcon
+  LockIcon,
+  Users
 } from 'lucide-react'; 
 
 const MyListings = () => {
@@ -25,6 +26,23 @@ const MyListings = () => {
   const totalValue = userListings.reduce((sum, listing) => sum + (listing.price || 0), 0);
   const activeListings = userListings.filter((listing) => listing.status === "active").length;
   const soldListing = userListings.filter((listing) => listing.status === "sold").length;
+
+  const formatNumber=(num)=>{
+    if(num>=1000000) return (num/1000000).toFixed(1) + "M"
+    if(num>=1000) return (num/1000).toFixed(1) + "K"
+    return num?.toString() || "0"
+  }
+
+  const getStatusIcon=(status)=>{
+    switch (status) {
+      case "active":
+        return <CheckCircle className='size-3.5'/>
+        break;
+    
+      default:
+        break;
+    }
+  }
 
   return (
     <div className='min-h-screen bg-[#0f111a] text-gray-100 px-6 md:px-16 lg:px-24 xl:px-32 pt-8 pb-10'>
@@ -113,11 +131,16 @@ const MyListings = () => {
                                   )}
                                   <button className='text-nowrap'>
                                     Status:{" "}
-                                    <span>
+                                    <span className={
+                                      listing.isCredentialSubmitted
+                                      ? listing.isCredentialVerified
+                                      ? listing.isCredentialChanged
+                                      ? "text-green-600" : "text-indigo-600" : "text-slate-600" : "text-red-600"
+                                    }>
                                       {listing.isCredentialSubmitted
-                                      ? (listing.isCredentialVerified
-                                    ? "Changed" : "Verified")
-                                     : "Not Submitted"}
+                                      ? listing.isCredentialVerified
+                                      ? listing.isCredentialChanged
+                                    ? "Changed" : "Verified" : "Submitted": "Not Submitted"}
                                     </span>
                                   </button>
                                 </div>
@@ -134,6 +157,19 @@ const MyListings = () => {
                       </div>
                       <p className='text-sm text-gray-400'><span>@{listing.username}</span></p>
                     </div>
+                </div>
+
+                <div className='space-y-4'>
+                  <div className='grid grid-cols-2 gap-2 text-sm'>
+                        <div className='flex items-center space-x-2'>
+                          <Users className='size-4 text-gray-400'/>
+                          <span>{formatNumber(listing.followers_count)} followers</span>
+                        </div>
+                        <span>
+                          {`icon`}{" "}<span>{listing.status}</span>
+                        </span>
+                  </div>
+
                 </div>
                 </div>
               </div>
