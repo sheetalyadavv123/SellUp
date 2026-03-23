@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import StatCard from '../components/StatCard';
@@ -7,6 +7,8 @@ import {
   ArrowDownCircleIcon, CoinsIcon, PlusIcon, StarIcon,
   Instagram, Twitter, Youtube, Facebook, MessageSquare, LockIcon,Users,BanIcon,XCircle,
   TrendingUp,TrashIcon,Edit,EyeOffIcon,EyeIcon} from 'lucide-react'; 
+import CredentialSubmission from '../components/CredentialSubmission';
+import WithdrawModel from '../components/WithdrawModel';
 
 const MyListings = () => {
   const { userListings = [], balance = { earned: 0, withdrawn: 0, available: 0 } } = useSelector((state) => state.listing);
@@ -110,7 +112,7 @@ const MyListings = () => {
           { label: 'Withdrawn', value: balance.withdrawn, icon: ArrowDownCircleIcon },
           { label: 'Available', value: balance.available, icon: CoinsIcon },
         ].map((item, index) => (
-          <div 
+          <div onClick={()=>item.label === "Available" && setshowWithdrawal(true)}
             key={index} 
             className='flex flex-1 items-center justify-between p-4 rounded-lg border border-gray-700 bg-[#0f111a] hover:bg-[#2a2f45] transition cursor-pointer'
           >
@@ -157,7 +159,7 @@ const MyListings = () => {
                                 <div className='bg-black text-gray-600 text-xs rounded border border-gray-200 p-2 px-3'>
                                   {!listing.isCredentialSubmitted && (
                                     <>
-                                    <button className='flex items-center gap-2 text-nowrap'>Add Credentials</button>
+                                    <button onClick={()=>setShowCredentialSubmission(listing)} className='flex items-center gap-2 text-nowrap'>Add Credentials</button>
                                     <hr className='border-gray-200 my-2'/>
                                     </>
                                   )}
@@ -243,6 +245,14 @@ const MyListings = () => {
             ))}
         </div>
       )}
+      {showCredentialSubmission && (
+        <CredentialSubmission listing={showCredentialSubmission} onClose={()=>setShowCredentialSubmission(null)}/>
+      )}
+
+      {showWithdrawal && (
+        <WithdrawModel onClose={()=>setshowWithdrawal(null)}/>
+      )}
+
        {/* Footer */}
       <div className='border-t border-slate-800 p-8 text-center mt-28'>
         <p className='text-sm text-gray-500'>
