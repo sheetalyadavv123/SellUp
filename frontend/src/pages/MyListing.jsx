@@ -7,7 +7,14 @@ import {
   ArrowDownCircleIcon, CoinsIcon, PlusIcon, StarIcon,
   Instagram, Twitter, Youtube, Facebook, MessageSquare, 
   LockIcon,
-  Users
+  Users,
+  BanIcon,
+  XCircle,
+  TrendingUp,
+  TrashIcon,
+  Edit,
+  EyeOffIcon,
+  EyeIcon
 } from 'lucide-react'; 
 
 const MyListings = () => {
@@ -37,10 +44,29 @@ const MyListings = () => {
     switch (status) {
       case "active":
         return <CheckCircle className='size-3.5'/>
-        break;
-    
+      case "ban":
+        return <BanIcon className='size-3.5'/>
+      case "sold":
+        return <DollarSign className='size-3.5'/>
+      case "inactive":
+        return <XCircle className='size-3.5'/>
       default:
-        break;
+        return <Clock className='size-3.5'/>
+    }
+  }
+
+  const getStatusColor=(status)=>{
+    switch (status) {
+      case "active":
+        return "text-green-400";
+      case "ban":
+        return "text-red-400";
+      case "sold":
+        return "text-indigo-400";
+      case "inactive":
+        return "text-gray-400";
+      default:
+        return "text-gray-400";
     }
   }
 
@@ -165,11 +191,40 @@ const MyListings = () => {
                           <Users className='size-4 text-gray-400'/>
                           <span>{formatNumber(listing.followers_count)} followers</span>
                         </div>
-                        <span>
-                          {`icon`}{" "}<span>{listing.status}</span>
+                        <span className={`flex items-center justify-end gap-1 ${getStatusColor(listing.status)}`}>
+                          {getStatusIcon(listing.status)} <span>{listing.status}</span>
                         </span>
+                        <div className='flex items-centerspace-x-2'>
+                          <TrendingUp className='size-4 text-gray-400'/>
+                          <span>{listing.engagement_rate}% engagement</span>
+                        </div>
                   </div>
 
+                <div className='flex items-center justify-between pt-3 border-t
+                border-gray-200'>
+                  <span className='text-2xl font-bold text-gray-400'>
+                     {currency}
+                     {listing.price.toLocaleString()}
+                  </span>
+                  <div className='flex items-center space-x-2'>
+                      {listing.status!=="sold" && (
+                        <button className='p-2 border border-gray-300 rounded-lg 
+                        hover:bg-gray-50 hover:text-red-500'>
+                           <TrashIcon className='size-4'/>
+                        </button>
+                      )}
+                      <button className='p-2 border border-gray-300 rounded-lg 
+                        hover:bg-gray-50 hover:text-indigo-600'>
+                        <Edit className='size-4'/>
+                      </button>
+                      <button>
+                        {listing.status === "active" && (<EyeOffIcon
+                        className='size-4'/>)}
+                        {listing.status !== "active" && (<EyeIcon
+                        className='size-4'/>)}
+                      </button>
+                  </div>
+                </div>
                 </div>
                 </div>
               </div>
